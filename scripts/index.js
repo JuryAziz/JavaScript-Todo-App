@@ -11,7 +11,7 @@ loadFromLocalStorage = () => {
         if (storedTasks) {
             tasks = storedTasks;
         }
-        displayTasks(tasks);
+        renderTasks(tasks);
     } catch (ex) {
         console.log(ex, 'Sorry! an error occurred while fetching data from local storage');
     }
@@ -21,7 +21,7 @@ loadToLocalStorage = (tasks) => {
     localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
-displayTasks = (tasks) => {
+renderTasks = (tasks) => {
     let checkedTasks = 0;
     tasksContainerElement.replaceChildren();
 
@@ -31,30 +31,9 @@ displayTasks = (tasks) => {
     }
 
     tasks.forEach((task) => {
-        const taskElement = document.createElement('div');
-        const titleElement = document.createElement('p');
-        const checkElement = document.createElement('input');
-        const deleteButtonElement = document.createElement('button');
-        const editButtonElement = document.createElement('button');
-
-
-        taskElement.className = 'task';
-        titleElement.className = 'title';
-        titleElement.textContent = task.title;
-        checkElement.type = 'checkbox';
-        checkElement.checked = task.checked;
-        deleteButtonElement.textContent = 'delete';
-        editButtonElement.textContent = 'edit';
-
-        taskElement.appendChild(checkElement);
-        taskElement.appendChild(titleElement);
-        taskElement.appendChild(deleteButtonElement);
-        taskElement.appendChild(editButtonElement);
-        tasksContainerElement.appendChild(taskElement);
-
-        taskOptions(task, checkElement, deleteButtonElement, editButtonElement)
-
+        createTaskElement(task);
         task.checked ? checkedTasks++ : '';
+          
     });
     const countElement = document.createElement('p');
     countElement.textContent = 'remaining tasks:' + (tasks.length - checkedTasks);
@@ -76,7 +55,7 @@ addTask = () => {
 
         tasks.push(task);
         loadToLocalStorage(tasks);
-        displayTasks(tasks);
+        renderTasks(tasks);
 
     } catch (ex) {
         console.log(ex);
@@ -87,7 +66,7 @@ deleteTask = (id) => {
     try {
         tasks.splice(tasks.indexOf(tasks.find((task) => task.id === id)), 1);
         loadToLocalStorage(tasks);
-        displayTasks(tasks);
+        renderTasks(tasks);
     } catch (error) {
         console.log('Oops couldn\'t delete that!');
     }
@@ -106,7 +85,7 @@ editTask = (id) => {
 
     tasks.find((task) => task.id == id).title = newTitle;
     loadToLocalStorage(tasks);
-    displayTasks(tasks);
+    renderTasks(tasks);
 
 }
 
@@ -114,7 +93,7 @@ taskOptions = (task, checkElement, deleteButtonElement, editButtonElement) => {
     checkElement.addEventListener('click', (ev) => {
         task.checked = checkElement.checked;
         loadToLocalStorage(tasks);
-        displayTasks(tasks);
+        renderTasks(tasks);
     });
     deleteButtonElement.addEventListener('click', (ev) => {
         deleteTask(task.id);
@@ -127,7 +106,7 @@ taskOptions = (task, checkElement, deleteButtonElement, editButtonElement) => {
 searchTasks = () => {
     const searchTitle = searchInput.value.trim().toLowerCase();
     foundTasks = tasks.filter((task) => task.title.toLowerCase().includes(searchTitle));
-    displayTasks(foundTasks);
+    renderTasks(foundTasks);
 }
 
 checkForChange = () => {
@@ -137,6 +116,39 @@ checkForChange = () => {
     searchButtonElement.addEventListener('click', (ev) => {
         searchTasks(tasks);
     })
+}
+
+createTaskElement = (task) => {
+    const taskElement = document.createElement('div');
+    const titleElement = document.createElement('p');
+    const checkElement = document.createElement('input');
+    const deleteButtonElement = document.createElement('button');
+    const editButtonElement = document.createElement('button');
+
+
+    taskElement.className = 'task';
+    titleElement.className = 'title';
+    titleElement.textContent = task.title;
+    checkElement.type = 'checkbox';
+    checkElement.checked = task.checked;
+    deleteButtonElement.textContent = 'delete';
+    editButtonElement.textContent = 'edit';
+
+    styleTask(taskElement, checkElement, deleteButtonElement, editButtonElement);
+
+    taskElement.appendChild(checkElement);
+    taskElement.appendChild(titleElement);
+    taskElement.appendChild(deleteButtonElement);
+    taskElement.appendChild(editButtonElement);
+
+    tasksContainerElement.appendChild(taskElement);
+
+    taskOptions(task, checkElement, deleteButtonElement, editButtonElement)
+
+}
+
+styleTask = (taskElement, checkElement, deleteButtonElement, editButtonElement) => {
+    
 }
 // when landing
 loadFromLocalStorage();
