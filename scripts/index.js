@@ -2,7 +2,8 @@ let tasks = [];
 const tasksContainerElement = document.querySelector('.tasks-container'); // parent of all tasks
 const taskInput = document.querySelector('#task-title-input');
 const addButtonElement = document.querySelector('.add-btn');
-
+const searchInput = document.querySelector('#search-input');
+const searchButtonElement = document.querySelector('.search-btn');
 
 loadFromLocalStorage = () => {
     try {
@@ -10,6 +11,7 @@ loadFromLocalStorage = () => {
         if (storedTasks) {
             tasks = storedTasks;
         }
+        displayTasks(tasks);
     } catch (ex) {
         console.log(ex, 'Sorry! an error occurred while fetching data from local storage');
     }
@@ -19,10 +21,9 @@ loadToLocalStorage = (tasks) => {
     localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
-displayTasks = () => {
+displayTasks = (tasks) => {
     let checkedTasks = 0;
     tasksContainerElement.replaceChildren();
-    loadFromLocalStorage();
 
     if (!tasks || tasks.length == 0) {
         tasksContainerElement.textContent = 'NO TASKS';
@@ -49,9 +50,6 @@ displayTasks = () => {
         taskElement.appendChild(titleElement);
         taskElement.appendChild(deleteButtonElement);
         taskElement.appendChild(editButtonElement);
-
-        // ? checkForChange() => button.onclick
-        // ? createTaskElement() => append to task container
         tasksContainerElement.appendChild(taskElement);
 
         taskOptions(task, checkElement, deleteButtonElement, editButtonElement)
@@ -61,7 +59,6 @@ displayTasks = () => {
     const countElement = document.createElement('p');
     countElement.textContent = 'remaining tasks:' + (tasks.length - checkedTasks);
     tasksContainerElement.appendChild(countElement);
-    loadToLocalStorage(tasks);
 }
 
 addTask = () => {
@@ -72,14 +69,14 @@ addTask = () => {
         if (!taskTitle) return console.log('Oops no title specified');
 
         const task = {
-            id: tasks.length,
+            id: Date.now().toString(32),
             title: taskTitle,
             checked: false,
         };
 
         tasks.push(task);
         loadToLocalStorage(tasks);
-        displayTasks();
+        displayTasks(tasks);
 
     } catch (ex) {
         console.log(ex);
@@ -98,7 +95,7 @@ deleteTask = (id) => {
 
 editTask = (id) => {
 
-    newTitle = prompt('enter the new title');
+    let newTitle = prompt('enter the new title');
 
     if (newTitle === null) return;
     else if (!newTitle.trim()) {
@@ -117,7 +114,7 @@ taskOptions = (task, checkElement, deleteButtonElement, editButtonElement) => {
     checkElement.addEventListener('click', (ev) => {
         task.checked = checkElement.checked;
         loadToLocalStorage(tasks);
-        displayTasks();
+        displayTasks(tasks);
     });
     deleteButtonElement.addEventListener('click', (ev) => {
         deleteTask(task.id);
@@ -127,11 +124,20 @@ taskOptions = (task, checkElement, deleteButtonElement, editButtonElement) => {
     });
 }
 
+searchTasks = () => {
+    const searchTitle = searchInput.value.trim().toLowerCase();
+    foundTasks = tasks.filter((task) => task.title.toLowerCase().includes(searchTitle));
+    displayTasks(foundTasks);
+}
+
 checkForChange = () => {
     addButtonElement.addEventListener('click', (ev) => {
-        addTask();
+        addTask(tasks);
     });
+    searchButtonElement.addEventListener('click', (ev) => {
+        searchTasks(tasks);
+    })
 }
 // when landing
-displayTasks();
+loadFromLocalStorage();
 checkForChange();
