@@ -1,12 +1,28 @@
-let tasks;
+let tasks = [];
 const tasksContainerElement = document.querySelector('.tasks-container'); // parent of all tasks
 const taskInput = document.querySelector('#task-title-input');
+const addButtonElement = document.querySelector('.add-btn');
+
+
+loadFromLocalStorage = () => {
+    try {
+        const storedTasks = JSON.parse(localStorage.getItem('tasks'));
+        if (storedTasks) {
+            tasks = storedTasks;
+        }
+    } catch (ex) {
+        console.log(ex, 'Sorry! an error occurred while fetching data from local storage');
+    }
+}
+
+loadToLocalStorage = (tasks) => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
 
 displayTasks = () => {
 
-    // tasksContainerElement.replaceChildren();
+    tasksContainerElement.replaceChildren();
     loadFromLocalStorage();
-    tasks = [];
 
     if (!tasks || tasks.length == 0) {
         tasksContainerElement.textContent = 'NO TASKS';
@@ -26,7 +42,7 @@ displayTasks = () => {
 
         taskElement.appendChild(checkElement);
         taskElement.appendChild(titleElement);
-        
+
         // ? checkForChange() => button.onclick
         // ? createTaskElement() => append to task container
         tasksContainerElement.appendChild(taskElement);
@@ -37,21 +53,35 @@ displayTasks = () => {
     });
     
     loadToLocalStorage(tasks);
-};
-
-loadFromLocalStorage = () => {
-    try {
-        const storedTasks = JSON.parse(localStorage.getItem('tasks'));
-        if (storedTasks) {
-            this.tasks = storedTasks;
-        }
-    } catch (ex) {
-        console.log('Sorry! an error occurred while fetching data from local storage');
-    }
-};
-
-loadToLocalStorage = (tasks) => {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
+addTask = () => {
+    try {
+        const taskTitle = taskInput.value.trim();
+        taskInput.value = '';
+
+        if (!taskTitle) return console.log('Oops no title specified');
+
+        const task = {
+            title: taskTitle,
+            checked: false,
+        };
+
+        tasks.push(task);
+        loadToLocalStorage(tasks);
+        displayTasks();
+
+    } catch (ex) {
+        console.log(ex);
+    }
+}
+
+checkForChange = () => {
+    addButtonElement.addEventListener('click', (ev) => {
+        addTask();
+    });
+}
+
+// when landing
 displayTasks();
+checkForChange();
