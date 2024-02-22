@@ -44,7 +44,7 @@ displayTasks = () => {
         checkElement.checked = task.checked;
         deleteButtonElement.textContent = 'delete';
         editButtonElement.textContent = 'edit';
-        
+
         taskElement.appendChild(checkElement);
         taskElement.appendChild(titleElement);
         taskElement.appendChild(deleteButtonElement);
@@ -59,7 +59,7 @@ displayTasks = () => {
         // TODO: create and add edit button to task
         // TODO: show tasks count
     });
-    
+
     loadToLocalStorage(tasks);
 }
 
@@ -71,7 +71,7 @@ addTask = () => {
         if (!taskTitle) return console.log('Oops no title specified');
 
         const task = {
-            id : tasks.length,
+            id: tasks.length,
             title: taskTitle,
             checked: false,
         };
@@ -95,14 +95,29 @@ deleteTask = (id) => {
     }
 }
 
-editTask = (index) => {}
+editTask = (id) => {
+
+    newTitle = prompt('enter the new title');
+    
+    if (newTitle === null) return;
+    else if (!newTitle.trim()){
+        if(confirm('you entered an empty title, do you want to delete the task?'))
+            deleteTask(id);
+        return;
+    }
+
+    tasks.find((task) => task.id == id).title = newTitle;
+    loadToLocalStorage(tasks);
+    displayTasks(tasks);
+
+} 
 
 taskOptions = (task, deleteButtonElement, editButtonElement) => {
-    deleteButtonElement.addEventListener('click', (ev) =>{
+    deleteButtonElement.addEventListener('click', (ev) => {
         deleteTask(task.id);
     })
     editButtonElement.addEventListener('click', (ev) => {
-        editTask();
+        editTask(task.id);
     })
 }
 
