@@ -1,12 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="your favorite task manager" />
+    <meta name="author" content="Jury A. Alsubhi" />
+    <meta name="keywords" content="Todo, tasks, planner" />
+    <link rel="stylesheet" href="./styels/style.css" />
+    <title>FINI</title>
+  </head>
+  <body>
+    <section class="body-container">
+      <article class="title-section">
+        <h1>FINI</h1>
+        <h2>Get things done</h2>
+      </article>
+      <article class="list-section">
+        <div class="tasks-container"></div>
+        <div class="new-task-container">
+          <form action="add-task-form">
+            <label for="task-title-input"></label>
+            <input
+              type="text"
+              id="task-title-input"
+              placeholder="What is your new task?"
+            />
+            <button type="submit" class="btn add-btn">add</button>
+          </form>
+        </div>
+      </article>
+    </section>
+    <script src="./scripts/index.js"></script>
+  </body>
 </html>
