@@ -33,20 +33,28 @@ displayTasks = () => {
         const taskElement = document.createElement('div');
         const titleElement = document.createElement('p');
         const checkElement = document.createElement('input');
+        const deleteButtonElement = document.createElement('button');
+        const editButtonElement = document.createElement('button');
+
 
         taskElement.className = 'task';
         titleElement.className = 'title';
         titleElement.textContent = task.title;
         checkElement.type = 'checkbox';
         checkElement.checked = task.checked;
-
+        deleteButtonElement.textContent = 'delete';
+        editButtonElement.textContent = 'edit';
+        
         taskElement.appendChild(checkElement);
         taskElement.appendChild(titleElement);
+        taskElement.appendChild(deleteButtonElement);
+        taskElement.appendChild(editButtonElement);
 
         // ? checkForChange() => button.onclick
         // ? createTaskElement() => append to task container
         tasksContainerElement.appendChild(taskElement);
 
+        taskOptions(task, deleteButtonElement, editButtonElement)
         // TODO: create and add delete button to task (event listener + append)
         // TODO: create and add edit button to task
         // TODO: show tasks count
@@ -63,6 +71,7 @@ addTask = () => {
         if (!taskTitle) return console.log('Oops no title specified');
 
         const task = {
+            id : tasks.length,
             title: taskTitle,
             checked: false,
         };
@@ -76,12 +85,32 @@ addTask = () => {
     }
 }
 
+deleteTask = (id) => {
+    try {
+        tasks.splice(tasks.indexOf(tasks.find((task) => task.id === id)), 1);
+        loadToLocalStorage(tasks);
+        displayTasks(tasks);
+    } catch (error) {
+        console.log('Oops couldn\'t delete that!');
+    }
+}
+
+editTask = (index) => {}
+
+taskOptions = (task, deleteButtonElement, editButtonElement) => {
+    deleteButtonElement.addEventListener('click', (ev) =>{
+        deleteTask(task.id);
+    })
+    editButtonElement.addEventListener('click', (ev) => {
+        editTask();
+    })
+}
+
 checkForChange = () => {
     addButtonElement.addEventListener('click', (ev) => {
         addTask();
     });
 }
-
 // when landing
 displayTasks();
 checkForChange();
