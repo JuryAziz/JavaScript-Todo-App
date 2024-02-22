@@ -54,7 +54,7 @@ displayTasks = () => {
         // ? createTaskElement() => append to task container
         tasksContainerElement.appendChild(taskElement);
 
-        taskOptions(task, deleteButtonElement, editButtonElement)
+        taskOptions(task, checkElement, deleteButtonElement, editButtonElement)
         // TODO: create and add delete button to task (event listener + append)
         // TODO: create and add edit button to task
         // TODO: show tasks count
@@ -98,10 +98,10 @@ deleteTask = (id) => {
 editTask = (id) => {
 
     newTitle = prompt('enter the new title');
-    
+
     if (newTitle === null) return;
-    else if (!newTitle.trim()){
-        if(confirm('you entered an empty title, do you want to delete the task?'))
+    else if (!newTitle.trim()) {
+        if (confirm('you entered an empty title, do you want to delete the task?'))
             deleteTask(id);
         return;
     }
@@ -110,15 +110,19 @@ editTask = (id) => {
     loadToLocalStorage(tasks);
     displayTasks(tasks);
 
-} 
+}
 
-taskOptions = (task, deleteButtonElement, editButtonElement) => {
+taskOptions = (task, checkElement, deleteButtonElement, editButtonElement) => {
+    checkElement.addEventListener('click', (ev) => {
+        task.checked = checkElement.checked;
+        loadToLocalStorage(tasks);
+    });
     deleteButtonElement.addEventListener('click', (ev) => {
         deleteTask(task.id);
-    })
+    });
     editButtonElement.addEventListener('click', (ev) => {
         editTask(task.id);
-    })
+    });
 }
 
 checkForChange = () => {
