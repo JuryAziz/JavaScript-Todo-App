@@ -20,7 +20,7 @@ loadToLocalStorage = (tasks) => {
 }
 
 displayTasks = () => {
-
+    let checkedTasks = 0;
     tasksContainerElement.replaceChildren();
     loadFromLocalStorage();
 
@@ -55,11 +55,12 @@ displayTasks = () => {
         tasksContainerElement.appendChild(taskElement);
 
         taskOptions(task, checkElement, deleteButtonElement, editButtonElement)
-        // TODO: create and add delete button to task (event listener + append)
-        // TODO: create and add edit button to task
-        // TODO: show tasks count
-    });
 
+        task.checked ? checkedTasks++ : '';
+    });
+    const countElement = document.createElement('p');
+    countElement.textContent = 'remaining tasks:' + (tasks.length - checkedTasks);
+    tasksContainerElement.appendChild(countElement);
     loadToLocalStorage(tasks);
 }
 
@@ -116,6 +117,7 @@ taskOptions = (task, checkElement, deleteButtonElement, editButtonElement) => {
     checkElement.addEventListener('click', (ev) => {
         task.checked = checkElement.checked;
         loadToLocalStorage(tasks);
+        displayTasks();
     });
     deleteButtonElement.addEventListener('click', (ev) => {
         deleteTask(task.id);
