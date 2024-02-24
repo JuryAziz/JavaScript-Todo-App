@@ -1,5 +1,5 @@
 let tasks = [];
-const tasksContainerElement = document.querySelector('.tasks-container'); // parent of all tasks
+const tasksContainerElement = document.querySelector('.tasks-list-container'); // parent of all tasks
 const taskInput = document.querySelector('#task-title-input');
 const addButtonElement = document.querySelector('.add-btn');
 const searchInput = document.querySelector('#search-input');
@@ -11,7 +11,6 @@ loadFromLocalStorage = () => {
         if (storedTasks) {
             tasks = storedTasks;
         }
-        renderTasks(tasks);
     } catch (ex) {
         console.log(ex, 'Sorry! an error occurred while fetching data from local storage');
     }
@@ -31,13 +30,16 @@ renderTasks = (tasks) => {
     }
 
     tasks.forEach((task) => {
+
         createTaskElement(task);
         task.checked ? checkedTasks++ : '';
-          
+
     });
+
     const countElement = document.createElement('p');
     countElement.textContent = 'remaining tasks:' + (tasks.length - checkedTasks);
     tasksContainerElement.appendChild(countElement);
+
 }
 
 addTask = () => {
@@ -74,18 +76,50 @@ deleteTask = (id) => {
 
 editTask = (id) => {
 
-    let newTitle = prompt('enter the new title');
+    const index = tasks.map(task => task.id).indexOf(id);
 
-    if (newTitle === null) return;
-    else if (!newTitle.trim()) {
-        if (confirm('you entered an empty title, do you want to delete the task?'))
-            deleteTask(id);
-        return;
-    }
+    const taskElements = tasksContainerElement.children[index].children[0];
 
-    tasks.find((task) => task.id == id).title = newTitle;
-    loadToLocalStorage(tasks);
-    renderTasks(tasks);
+    const editContainer = document.createElement('div');
+    const newTitleInput = document.createElement('input');
+    const okButton = document.createElement('button');
+
+    okButton.textContent = 'Ok';
+    okButton.classList = 'btn';
+    editContainer.classList = 'task'
+
+    editContainer.appendChild(newTitleInput);
+    editContainer.appendChild(okButton);
+    tasksContainerElement.children[index].appendChild(editContainer);
+
+    taskElements.style.display = 'none';
+    newTitleInput.value = taskElements.children[1].textContent;
+
+
+    okButton.addEventListener('click', (ev) => {
+        let newTitle = newTitleInput.value.trim();
+
+        if (!newTitle) {
+            if (confirm('you entered an empty title, do you want to delete the task?')) {
+                deleteTask(id);
+                return;
+            }
+
+            newTitle = taskElements.children[1].textContent;
+
+        }
+
+        else {
+            const checked = newTitle === taskElements.children[1].textContent;
+            tasks.find((task) => task.id == id).title = newTitle;
+            tasks.find((task) => task.id == id).checked = checked;
+        }
+
+        editContainer.style.display = 'none';
+        taskElements.style.display = '';
+        loadToLocalStorage(tasks);
+        renderTasks(tasks);
+    })
 
 }
 
@@ -105,7 +139,7 @@ taskOptions = (task, checkElement, deleteButtonElement, editButtonElement) => {
 
 searchTasks = () => {
     const searchTitle = searchInput.value.trim().toLowerCase();
-    foundTasks = tasks.filter((task) => task.title.toLowerCase().includes(searchTitle));
+    const foundTasks = tasks.filter((task) => task.title.toLowerCase().includes(searchTitle));
     renderTasks(foundTasks);
 }
 
@@ -119,37 +153,46 @@ checkForChange = () => {
 }
 
 createTaskElement = (task) => {
+
     const taskElement = document.createElement('div');
+    const taskItem = document.createElement('div');
     const titleElement = document.createElement('p');
     const checkElement = document.createElement('input');
     const deleteButtonElement = document.createElement('button');
     const editButtonElement = document.createElement('button');
 
+    styleTask(task, taskElement, taskItem, checkElement, titleElement, deleteButtonElement, editButtonElement);
 
-    taskElement.className = 'task';
-    titleElement.className = 'title';
-    titleElement.textContent = task.title;
-    checkElement.type = 'checkbox';
-    checkElement.checked = task.checked;
-    deleteButtonElement.textContent = 'delete';
-    editButtonElement.textContent = 'edit';
+    taskItem.appendChild(checkElement);
+    taskItem.appendChild(titleElement);
+    taskItem.appendChild(deleteButtonElement);
+    taskItem.appendChild(editButtonElement);
 
-    styleTask(taskElement, checkElement, deleteButtonElement, editButtonElement);
-
-    taskElement.appendChild(checkElement);
-    taskElement.appendChild(titleElement);
-    taskElement.appendChild(deleteButtonElement);
-    taskElement.appendChild(editButtonElement);
-
+    taskElement.appendChild(taskItem);
     tasksContainerElement.appendChild(taskElement);
 
     taskOptions(task, checkElement, deleteButtonElement, editButtonElement)
 
 }
 
-styleTask = (taskElement, checkElement, deleteButtonElement, editButtonElement) => {
-    
+styleTask = (task, taskElement, taskItem, checkElement, titleElement, deleteButtonElement, editButtonElement) => {
+
+    titleElement.textContent = task.title;
+    checkElement.type = 'checkbox';
+    checkElement.checked = task.checked;
+    deleteButtonElement.textContent = 'delete';
+    editButtonElement.textContent = 'edit';
+
+    taskElement.classList.add('task');
+    taskItem.classList.add('task');
+    checkElement.classList.add('checkbox');
+    titleElement.classList.add('task-title', checkElement.checked ? 'done-task' : 'todo-task');
+    deleteButtonElement.classList.add('btn', 'delete-btn');
+    editButtonElement.classList.add('btn', 'edit-btn');
+
 }
 // when landing
 loadFromLocalStorage();
+renderTasks(tasks);
 checkForChange();
+
