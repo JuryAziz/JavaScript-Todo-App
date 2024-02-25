@@ -3,7 +3,6 @@ const tasksContainerElement = document.querySelector('.tasks-list-container'); /
 const taskInput = document.querySelector('#task-title-input');
 const addButtonElement = document.querySelector('.add-btn');
 const searchInput = document.querySelector('#search-input');
-const searchButtonElement = document.querySelector('.search-btn');
 
 loadFromLocalStorage = () => {
     try {
@@ -153,7 +152,7 @@ checkForChange = () => {
     addButtonElement.addEventListener('click', (ev) => {
         addTask(tasks);
     });
-    searchButtonElement.addEventListener('click', (ev) => {
+    searchInput.addEventListener('input', (ev) => {
         searchTasks(tasks);
     })
 }
