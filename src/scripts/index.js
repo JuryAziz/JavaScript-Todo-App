@@ -211,7 +211,7 @@ popUp = () => {
     popUpImg.src = './src/images/no-title.png';
 
     closeButton.classList.add('btn');
-    popUpImg.classList.add('img');
+    popUpImg.classList.add('popup-img');
     popUpContent.classList.add('popup-content');
     popUpContainer.classList.add('popup-container');
 

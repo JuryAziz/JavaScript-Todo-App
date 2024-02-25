@@ -198,6 +198,9 @@ input {
     margin: 10px;
 }
 
+.popup-img{
+    max-width: 60%;
+}
 
 @media (min-width: 820px) {
     .task-img {
