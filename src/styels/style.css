@@ -206,7 +206,7 @@ input {
     max-width: 60%;
 }
 
-@media (min-width: 820px) {
+@media (min-width: 900px) {
     .task-img {
         width: 30%;
     }

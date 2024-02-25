@@ -184,6 +184,7 @@ styleTask = (task, taskElement, taskItem, checkElement, titleElement, deleteButt
 
     titleElement.textContent = task.title;
     checkElement.type = 'checkbox';
+    checkElement.ariaLabel = 'task-checkbox';
     checkElement.checked = task.checked;
     deleteButtonElement.textContent = 'DEL';
     editButtonElement.textContent = 'EDIT';
