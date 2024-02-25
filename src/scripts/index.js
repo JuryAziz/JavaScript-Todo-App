@@ -50,7 +50,7 @@ renderTasks = (tasks) => {
 
     });
 
-    imgElement.src = checkedTasks != tasks.length ? './src/images/remaining-tasks.png' : './src/images/finished-tasks.png';
+    imgElement.src = checkedTasks !== tasks.length ? './src/images/remaining-tasks.png' : './src/images/finished-tasks.png';
     if (checkedTasks === 0) imgElement.src = './src/images/no-finished-tasks.png'
 
     textElement.textContent = 'we have \'' + (tasks.length - checkedTasks) + '\' tasks remaining';
@@ -79,7 +79,7 @@ addTask = () => {
 }
 
 deleteTask = (id) => {
-    tasks.splice(tasks.indexOf(tasks.find((task) => task.id === id)), 1);
+    tasks.splice(tasks.findIndex((task) => task.id === id), 1);
     loadToLocalStorage(tasks);
     renderTasks(tasks);
 }
@@ -116,9 +116,9 @@ editTask = (id) => {
         }
         else {
             const checked = newTitle === taskElements.children[1].textContent;
-            const taskCheckValue = tasks.find((task) => task.id == id).checked;
-            tasks.find((task) => task.id == id).title = newTitle;
-            tasks.find((task) => task.id == id).checked = checked ? taskCheckValue : false;
+            const taskCheckValue = tasks.find((task) => task.id === id).checked;
+            tasks.find((task) => task.id === id).title = newTitle;
+            tasks.find((task) => task.id === id).checked = checked ? taskCheckValue : false;
         }
 
         editContainer.style.display = 'none';
