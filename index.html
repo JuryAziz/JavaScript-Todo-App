@@ -9,32 +9,31 @@
     <meta name="description" content="your favorite task manager" />
     <meta name="author" content="Jury A. Alsubhi" />
     <meta name="keywords" content="Todo, tasks, planner" />
-    <link rel="stylesheet" href="./styels/style.css" />
-    <title>FINI</title>
+    <link rel="stylesheet" href="./src/styels/style.css" />
+    <title>to-do</title>
   </head>
   <body>
-    <!-- todo: sidebar -->
-    <section class="body-container">
-      <article class="header-section">
-        <h1>FINI</h1>
-        <h2>Get things done</h2>
-      </article>
-      <article class="tasks-section">
-        <div class="search-task-container">
-            <input type="text" id="search-input" placeholder="Search...">
-            <button class="btn search-btn">Search</button>
-        </div>
-        <div class="tasks-list-container"></div> 
-        <div class="add-task-container">
+      <section class="header-section">
+        <h1>TODO</h1>
+        <p>let's get things done!</p>
+      </section>
+      <section class="tasks-section">
+        <article class="search-task-container">
+          <label for="search-input"> </label>
+          <input type="text" id="search-input" placeholder="Search..." />
+          <button class="btn search-btn">SEARCH</button>
+        </article>
+        <article class="tasks-list-container"></article>
+        <article class="add-task-container">
+          <label for="task-title-input"> </label>
           <input
             type="text"
             id="task-title-input"
             placeholder="What is your new task?"
           />
-          <button class="btn add-btn">add</button>
-        </div>
-      </article>
-    </section>
-    <script src="./scripts/index.js"></script>
+          <button class="btn add-btn">ADD</button>
+        </article>
+      </section>
+    <script src="./src/scripts/index.js"></script>
   </body>
 </html>
